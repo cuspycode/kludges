@@ -19,9 +19,10 @@ for encoding images (GIFs).
 The server uses some JSP code, running under Tomcat, which is invoked
 transparently from Apache via mod_jk. If you want to customize it for
 your own site you probably need to adjust the URLs in the <B>.jsp</B>
-and the <B>.shtml</B> files. Don't forget to set write permission on
-the upload directory for the userid that runs Tomcat (you do run Tomcat
-as "www" or "apache", not as "root", right?)
+and the <B>.shtml</B> files. The applet should be re-usable without
+recompilation. Don't forget to set write permission on the upload
+directory for the userid that runs Tomcat (you do run Tomcat as
+"www" or "apache", never as "root", right?)
 
 <P>
 <A HREF="http://fulhack.dax.nu/gastbok.shtml">Example page</A>.
