@@ -22,5 +22,23 @@ Source code: <A HREF="buffer.c">buffer.c</A>.<BR>
 Compile like this: <CODE><B>gcc -O3 -o buffer buffer.c</B></CODE><BR>
 How to reduce the verbosity level: <CODE><B>buffer 2>/dev/null</B></CODE>
 
+<P>
+Typical use:
+
+<PRE>
+URL=$1
+MINUTES=$2
+
+rm -f audiodump.wav
+mkfifo audiodump.wav
+buffer < audiodump.wav | lame --quiet -b 128 - foo.mp3 &
+
+(sleep `expr $MINUTES \* 60`; echo "quit") | \
+        LD_LIBRARY_PATH=/usr/local/lib/win32 \
+                mplayer -really-quiet -ao pcm -vc dummy -vo null \
+                        -slave -cache 500 $URL
+
+</PRE>
+
 </BODY>
 </HTML>
