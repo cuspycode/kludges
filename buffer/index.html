@@ -26,17 +26,14 @@ How to reduce the verbosity level: <CODE><B>buffer 2>/dev/null</B></CODE>
 Typical use:
 
 <PRE>
-URL=$1
-MINUTES=$2
+URL=rtsp://www.example.com/encoder/1729.rm
+MINUTES=60
 
-rm -f audiodump.wav
 mkfifo audiodump.wav
 buffer < audiodump.wav | lame --quiet -b 128 - foo.mp3 &
-
 (sleep `expr $MINUTES \* 60`; echo "quit") | \
-        LD_LIBRARY_PATH=/usr/local/lib/win32 \
-                mplayer -really-quiet -ao pcm -vc dummy -vo null \
-                        -slave -cache 500 $URL
+        mplayer -really-quiet -ao pcm -vc dummy -vo null \
+                -slave -cache 500 $URL
 
 </PRE>
 <HR>
