@@ -1,5 +1,5 @@
 /* buffer.c by Bjorn Danielsson. Buffers input from stdin to stdout */
-/* $Id */
+/* $Id$ */
 #include <sys/types.h>
 #include <sys/time.h>
 #include <fcntl.h>
