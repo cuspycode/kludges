@@ -14,8 +14,12 @@ I use this program to buffer the PCM output from RealAudio&tm; crap before
 feeding it to an MP3 encoder.
 
 <P>
+Implemented by a simple select() loop and a ring of buffers.
+
+<P>
 Source code: <A HREF="buffer.c">buffer.c</A>.<BR>
-Compile like this: <CODE>gcc -O3 -o buffer buffer.c</CODE>
+Compile like this: <CODE>gcc -O3 -o buffer buffer.c</CODE><BR>
+How to reduce the verbosity level: <CODE>buffer 2>/dev/null</CODE>
 
 </BODY>
 </HTML>
