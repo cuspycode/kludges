@@ -104,7 +104,7 @@ sub dispatch_datagram {
 }
 
 sub read_nntp_response {
-#####    my $response = <NNTP>;
+    my $response = <NNTP>;
     # Just ignore it...
 }
 
@@ -170,7 +170,10 @@ setsockopt(SOCK, &IPPROTO_IP, &IP_MULTICAST_LOOP, pack("l",0)) or die("Loop");
 setsockopt(SOCK, &IPPROTO_IP, &IP_MULTICAST_TTL, pack("l",$ttl)) or die("TTL");
 setsockopt(SOCK, &IPPROTO_IP, &IP_ADD_MEMBERSHIP, &membership($dest)) or die("Add: $!");
 
-open NNTP, ">nntp-mcast-receive.nntp" or die "Couldn't open output file";
+socket(NNTP, PF_INET, SOCK_STREAM, getprotobyname('tcp'));
+connect(NNTP, sockaddr_in(119, INADDR_LOOPBACK)) or die("Connect: $!");
+####open NNTP, ">nntp-mcast-receive.nntp" or die "Couldn't open output file";
+
 select NNTP; $|=1; select STDOUT;
 
 my $rbits = "";
