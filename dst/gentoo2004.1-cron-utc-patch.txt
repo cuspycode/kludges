@@ -1,0 +1,60 @@
+*** entry.c~	Sun Oct 31 09:34:18 2004
+--- entry.c	Sun Oct 31 09:55:31 2004
+***************
+*** 267,270 ****
+--- 267,274 ----
+  	e->envp = env_set(e->envp, envstr);
+  #endif
++ 	{
++ 	  char *utc = env_get("CRONTAB_UTC", e->envp);
++ 	  if (utc && atoi(utc)) { e->flags |= CRONTAB_UTC; }
++ 	}
+  
+  	Debug(DPARS, ("load_entry()...about to parse command\n"))
+*** cron.h~	Sun Oct 31 09:34:18 2004
+--- cron.h	Sun Oct 31 09:42:00 2004
+***************
+*** 161,164 ****
+--- 161,165 ----
+  #define	DOW_STAR	0x02
+  #define	WHEN_REBOOT	0x04
++ #define CRONTAB_UTC	0x4000
+  } entry;
+  
+*** cron.c~	Sun Oct 31 09:34:18 2004
+--- cron.c	Sun Oct 31 09:52:14 2004
+***************
+*** 170,174 ****
+--- 170,176 ----
+  	register user		*u;
+  	register entry		*e;
++ 	register int		utcflag = 0;
+  
++    again:
+  	/* make 0-based values out of these so we can use them as indicies
+  	 */
+***************
+*** 190,193 ****
+--- 192,196 ----
+  	for (u = db->head;  u != NULL;  u = u->next) {
+  		for (e = u->crontab;  e != NULL;  e = e->next) {
++ 		  if ((e->flags & CRONTAB_UTC) == utcflag) {
+  			Debug(DSCH|DEXT, ("user [%s:%d:%d:...] cmd=\"%s\"\n",
+  					  env_get("LOGNAME", e->envp),
+***************
+*** 203,207 ****
+--- 206,219 ----
+  				job_add(e, u);
+  			}
++ 		  }
+  		}
++  	}
++ 	/* run the above code once again, but now with utcflag non-zero and
++ 	 * tm set to GMT instead of local time.
++ 	 */
++ 	if (!utcflag) {
++ 	  utcflag = CRONTAB_UTC;
++ 	  tm = gmtime(&TargetTime);
++ 	  goto again;
+  	}
+  }

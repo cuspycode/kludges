@@ -29,7 +29,7 @@ I implemented such a fix in 1999 through a
 <A HREF="http://urquell.pilsnet.sunet.se:8000/cron-utc-patch.txt">patch</A>
 to cron that allows a crontab file to mix local times and UTC times. By setting the environment variable CRONTAB_UTC=1 in the crontab file, subsequent entries are interpreted as UTC times. And by setting CRONTAB_UTC=0, the local-time interpretation is restored again for remaining entries.
 
-This simple patch was easy to install in most versions of Vixie cron that were in use in 1999. But in recent releases of FreeBSD and Debian Linux (I haven't checked other distributions yet) changes have been made to cron that are incompatible with my original patch. These changes are different in FreeBSD and Debian, so therefore there are now two separate patches for my CRONTAB_UTC hack:
+This simple patch was easy to install in most versions of Vixie cron that were in use in 1999. But in recent releases of FreeBSD and Debian Linux (I have only checked those and Gentoo so far) changes have been made to cron that are incompatible with my original patch. These changes are different in FreeBSD and Debian, so therefore there are now three separate patches for my CRONTAB_UTC hack:
 
 <UL>
 <LI><B>FreeBSD</B><BR>
@@ -55,6 +55,24 @@ This has been tested in Debian 3.0 ("woody") against the cron_3.0pl1-81 source (
 apt-get source cron
 cd cron-3.0pl1
 patch -b < ~/debian3-cron-utc-patch.txt
+make clean
+make
+</PRE>
+
+Then kill your running cron, copy your new cron to wherever you want,
+and start it.
+</UL>
+
+<P>
+<LI><B>Gentoo Linux</B><BR>
+<A HREF="http://urquell.pilsnet.sunet.se:8000/gentoo2004.1-cron-utc-patch.txt">http://urquell.pilsnet.sunet.se:8000/gentoo2004.1-cron-utc-patch.txt</A><BR>
+This has been tested in Gentoo 2004.1 against the unpacked and patched vixie-3.0.1-r4 sources. To install, download the patch file and do:
+
+<PRE>
+cd /usr/portage/sys-apps/vixie-cron/
+ebuild vixie-cron-3.0.1-r4.ebuild unpack
+cd /var/tmp/portage/vixie-cron-3.0.1-r4/work/vixie-cron-3.0.1/
+patch -b < ~/gentoo2004.1-cron-utc-patch.txt
 make clean
 make
 </PRE>
@@ -102,6 +120,6 @@ But never mind all that. Just install my patch and relax :)
 Happy hacking,<BR>
 Bj&ouml;rn Danielsson<BR>
 <HR>
-Page updated: 2003-12-08
+Page updated: 2004-10-31
 </BODY>
 </HTML>
