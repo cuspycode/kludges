@@ -1,0 +1,77 @@
+*** lib/entry.c.orig	Sat Aug 18 06:20:31 2001
+--- lib/entry.c	Wed Nov 26 16:55:11 2003
+***************
+*** 392,395 ****
+--- 392,399 ----
+  	}
+  #endif
++ 	{
++ 	  char *utc = env_get("CRONTAB_UTC", e->envp);
++ 	  if (utc && atoi(utc)) { e->flags |= CRONTAB_UTC; }
++ 	}
+  
+  	Debug(DPARS, ("load_entry()...about to parse command\n"))
+*** cron/cron.h.orig	Tue May 29 01:37:26 2001
+--- cron/cron.h	Mon Nov 24 10:44:42 2003
+***************
+*** 175,178 ****
+--- 175,179 ----
+  #define	RUN_AT	0x08
+  #define	NOT_UNTIL	0x10
++ #define	CRONTAB_UTC	0x4000
+  	time_t	lastrun;
+  } entry;
+*** cron/cron.c.orig	Tue May 29 01:37:26 2001
+--- cron/cron.c	Wed Nov 26 17:04:46 2003
+***************
+*** 167,171 ****
+--- 167,173 ----
+  	register user		*u;
+  	register entry		*e;
++ 	register int		utcflag = 0;
+  
++  again:
+  	/* make 0-based values out of these so we can use them as indicies
+  	 */
+***************
+*** 179,182 ****
+--- 181,186 ----
+  		getpid(), minute, hour, dom, month, dow))
+  
++ /* comment out the "intuitive" dst-handling stuff so it won't mess up */
++ #if 0
+  	if (dst_enabled && last_time != 0 
+  	&& TargetTime > last_time /* exclude stepping back */
+***************
+*** 237,240 ****
+--- 241,245 ----
+  		}
+  	}
++ #endif
+  
+  	/* the dom/dow situation is odd.  '* * 1,15 * Sun' will run on the
+***************
+*** 246,249 ****
+--- 251,255 ----
+  	for (u = db->head;  u != NULL;  u = u->next) {
+  		for (e = u->crontab;  e != NULL;  e = e->next) {
++ 		  if ((e->flags & CRONTAB_UTC) == utcflag) {
+  			Debug(DSCH|DEXT, ("user [%s:%d:%d:...] cmd=\"%s\"\n",
+  					  env_get("LOGNAME", e->envp),
+***************
+*** 282,286 ****
+--- 288,301 ----
+  				job_add(e, u);
+  			}
++ 		  }
+  		}
++ 	}
++ 	/* run the above code once again, but now with utcflag non-zero and
++ 	 * tm set to GMT instead of local time.
++ 	 */
++ 	if (!utcflag) {
++ 	  utcflag = CRONTAB_UTC;
++ 	  tm = gmtime(&TargetTime);
++ 	  goto again;
+  	}
+  

@@ -1,0 +1,98 @@
+I have made a small patch to "cron" that lets people choose between
+localtime and gmtime for their crontab entries. The choice is made
+depending on the setting of an environment variable in the crontab file.
+The cost is a factor 2 for the tiny amount of work that cron does when
+it checks all the crontab entries every minute.
+
+I finally got tired of having to use local daylight saving time for
+crontabs after seeing my nightly statistics-gathering scripts having
+to deal with 23 hour days, 25 hour days, some scripts running twice
+the same night, or not running at all, etc.
+
+Here is a sample crontab that will send mail to the crontab owner
+every day at 12:00 GMT, and at 12:00 in the local timezone.
+
+00 12 * * *     echo localtime
+CRONTAB_UTC=1
+00 12 * * *     echo gmtime
+
+Setting CRONTAB_UTC=0 will turn off the flag for later entries.
+
+I have only tested this on FreeBSD 3.0, FreeBSD 3.3, and Linux RedHat 6.1
+but it should work on any system that uses Vixie cron.
+
+To install the patch in the cron source:
+On FreeBSD, cd to /usr/src/usr.sbin/cron/ and do "patch -p0"
+On RedHat, cd to /usr/src/redhat/SOURCES/vixie-cron-* and do "patch -p1"
+(with this patch file as the input of course).
+
+                        Happy hacking,
+
+                                Bjorn Danielsson  <bd@sunet.se>
+
+
+*** lib/entry.c~	Sat Aug 28 03:17:00 1999
+--- lib/entry.c	Sun Oct 31 19:00:43 1999
+***************
+*** 312,316 ****
+  	e->envp = env_set(e->envp, envstr);
+  #endif
+! 
+  	Debug(DPARS, ("load_entry()...about to parse command\n"))
+  
+--- 312,319 ----
+  	e->envp = env_set(e->envp, envstr);
+  #endif
+! 	{
+! 	  char *utc = env_get("CRONTAB_UTC", e->envp);
+! 	  if (utc && atoi(utc)) { e->flags |= CRONTAB_UTC; }
+! 	}
+  	Debug(DPARS, ("load_entry()...about to parse command\n"))
+  
+*** cron/cron.h~	Sat Aug 28 03:17:00 1999
+--- cron/cron.h	Sun Oct 31 19:06:00 1999
+***************
+*** 173,176 ****
+--- 173,177 ----
+  #define	DOW_STAR	0x02
+  #define	WHEN_REBOOT	0x04
++ #define	CRONTAB_UTC	0x08
+  } entry;
+  
+*** cron/cron.c~	Sat Aug 28 03:17:00 1999
+--- cron/cron.c	Sun Dec 12 16:26:59 1999
+***************
+*** 169,173 ****
+--- 169,175 ----
+  	register user		*u;
+  	register entry		*e;
++ 	register int		utcflag = 0;
+  
++  again:
+  	/* make 0-based values out of these so we can use them as indicies
+  	 */
+***************
+*** 189,192 ****
+--- 191,195 ----
+  	for (u = db->head;  u != NULL;  u = u->next) {
+  		for (e = u->crontab;  e != NULL;  e = e->next) {
++ 		  if ((e->flags & CRONTAB_UTC) == utcflag) {
+  			Debug(DSCH|DEXT, ("user [%s:%d:%d:...] cmd=\"%s\"\n",
+  					  env_get("LOGNAME", e->envp),
+***************
+*** 202,206 ****
+--- 205,218 ----
+  				job_add(e, u);
+  			}
++ 		  }
+  		}
++ 	}
++ 	/* run the above code once again, but now with utcflag non-zero and
++ 	 * tm set to GMT instead of local time.
++ 	 */
++ 	if (!utcflag) {
++ 	  utcflag = CRONTAB_UTC;
++ 	  tm = gmtime(&TargetTime);
++ 	  goto again;
+  	}
+  }
