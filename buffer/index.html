@@ -1,0 +1,21 @@
+<HTML>
+<HEAD>
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset="ISO-8859-1">
+<TITLE>buffer.c</TITLE>
+<LINK REL=StyleSheet HREF="../style.css" TYPE="text/css" MEDIA=screen>
+</HEAD>
+<BODY>
+<H1>buffer.c</H1>
+<P>
+This program reads data from standard input, buffers it, then writes it to
+standard output. The default buffer size is 4 Mbytes (4194304 bytes in this
+case, not 4000000). Call it as <B>buffer 42</B> to use a 42 Mbyte buffer.
+I use this program to buffer the PCM output from RealAudio&tm; crap before
+feeding it to an MP3 encoder.
+
+<P>
+Source code: <A HREF="buffer.c">buffer.c</A>.<BR>
+Compile like this: <PRE>gcc -O3 -o buffer buffer.c</PRE>
+
+</BODY>
+</HTML>
