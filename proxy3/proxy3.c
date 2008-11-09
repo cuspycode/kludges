@@ -2,12 +2,13 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <strings.h>
+#include <string.h>
 
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <netdb.h>
 
 #include <unistd.h>
@@ -228,14 +229,13 @@ connect_remote_socket(char *remote, int port)
   char **cp;
   static char *alist[1];
 #endif
-  unsigned long inet_addr();
   static struct hostent def;
   static struct in_addr defaddr;
   static char namebuf[256];
 
   /* If not a raw ip address, try nameserver */
   if (!isdigit(*remote) ||
-      (long)(defaddr.s_addr = inet_addr(remote)) == -1)
+      (defaddr.s_addr = inet_addr(remote)) == INADDR_NONE)
     hp = gethostbyname(remote);
   else {
     /* Raw ip address, fake  */
