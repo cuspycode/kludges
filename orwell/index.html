@@ -73,6 +73,11 @@ On the client machine (Macintosh), do the following:
       <li><code>&lt;vncport&gt;</code> is the remote-forwarded VNC port, e.g. <code>5942</code></li>
     </ul>
     </p>
+    <p>
+      Note: don't use hostnames or usernames that contain hyphens (-) or digits(0-9),
+      since this will break the script's simple-minded configuration file parser.
+      Underscore (_) can be used.
+    </p>
   </li>
 
   <li>Download the app from the download link above.</li>
@@ -97,11 +102,20 @@ On the target host (the other end of the tunnel), do the following:
 
 </ol>
 
-<p>
-Verify that it works by double-clicking <code>Orwell.app</code> on the client machine,
-and then connect a VNC viewer to e.g. <code>vnchost.example.com:42</code>.
-Note: The client must of course have "Remote Desktop" enabled in its sharing preferences.
-</p>
+Go back to the client machine and do:
+
+<ol>
+  <li>Install the target host's public SSH key in <code>~/.ssh/known_hosts</code>.
+      The easiest way to do this is by simply connecting with <code>ssh</code> to the
+      host and then answer "yes" to the "Are you sure?" question. If you are paranoid
+      you can then check the RSA fingerprint with
+      <code>ssh-keygen -l -f /etc/ssh/ssh_host_rsa_key.pub</code>
+      on the target host.</li>
+  <li>Verify that it works by double-clicking <code>Orwell.app</code> on the client machine,
+      and then connect a VNC viewer to e.g. <code>vnchost.example.com:42</code>.
+      Note: The client must of course have "Remote Desktop" enabled in its sharing preferences.
+  </li>
+</ol>
 
 </body>
 </html>
