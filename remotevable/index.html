@@ -6,14 +6,21 @@
 <style>
 <!--
 .api-list td { padding-left: 1em; }
+.color1 { color: #909090; }
+.color2 { color: #000000; }
 -->
 </style>
 </head>
 <body>
-<h1>Remote Removable Drive</h1>
+<h1><span class="color1"><span class="color2">Remote</span> Remo<span class="color2">vable</span> Drive</h1>
 <p>
 This is a simple Perl CGI script that lets a remote user mount and unmount
-removable drives via a web page. The CGI script uses a
+removable drives via a web page. This eliminates the need to interact with
+a file server via command line or point-and-click console (either locally
+or remote) in order to mount or unmount a removable drive.
+</p>
+<p>
+The CGI script uses a
 <a href="http://en.wikipedia.org/wiki/Representational_State_Transfer">REST</a>
 API which is called by Javascript client code on the web page. This makes it very
 easy to create other clients (e.g. scripts or GUI widgets) that use the same protocol.
@@ -56,6 +63,11 @@ The REST API looks like this:
 </div>
 
 <p>
+Note: the list of unmounted volumes contains the names of volumes that are
+attached but not mounted, so while the intersection of mounted and unmounted
+volume names is empty by definition, their union is a subset of all mount-points.
+</p>
+<p>
 The code can be downloaded
 <a href="remotevable.tar.gz">here</a>.
 A brief explanation about the contents:
@@ -90,23 +102,43 @@ A brief explanation about the contents:
 </div>
 
 <p>
+Installation:
+</p>
+
+<ol>
+<li>If desired, edit <code>Makefile</code>, <code>setuid-wrapper.c</code>,
+    <code>request.pl</code>, <code>response.pl</code> and <code>mount.html</code>
+    in order to change the installation paths and mount-point root from the defaults.</li>
+<li>Then do "<code>make</code>" to compile <code>setuid-wrapper</code> for
+    your CPU architecture. This also copies the file <code>sample.htaccess</code>
+    to <code>.htaccess</code> which will be the source for installation later.</li>
+<li>Edit <code>.htaccess</code> to fit your requirements. This file handles access
+    to the REST API scripts.</li>
+<li>Do "<code>sudo make install</code>" to install the scripts.</li>
+<li>Do "<code>sudo make install-web</code>" to install the client web page
+    <code>mount.html</code> in the default location under the mount-points root.
+    Alternatively you can install it manually wherever you like under the document
+    root of the web server.</li>
+</ol>
+
+<p>
 Read below for how to set up the rest of your system.
 </p>
 
 <h3>Prepare your file server</h3>
 <p>
-First create the root mount point:
+First create the root for the mount points:
 <pre>
-sudo mkdir /removable
+mkdir /removable
 </pre>
 </p>
 
 <p>
 Then create a mount point for each individual volume:
 <pre>
-sudo mkdir /removable/My-1st-Volume
-sudo mkdir /removable/My-2nd-Volume
-sudo mkdir /removable/My-3rd-Volume
+mkdir /removable/My-1st-Volume
+mkdir /removable/My-2nd-Volume
+mkdir /removable/My-3rd-Volume
 </pre>
 (Repeat for as many volumes as desired)
 </p>
@@ -128,7 +160,8 @@ to make my scripts parse fstab to figure out the connections)
 <p>
 This step is optional. You can use any file sharing protocol you want,
 but WebDAV is very versatile. Be careful with NFS since you may need
-to unexport the share before it is possible to unmount it.
+to unexport the share before it is possible to unmount it. This requires
+some extra hacking.
 For WebDAV, enable the relevant Apache modules and add the following
 configuration:
 <pre>
@@ -145,7 +178,7 @@ Alias /removable "/removable"
 </p>
 
 <p>
-(You can combine or replace this with password authentication if you like)
+(You can combine or replace this with password-based authorization if you like)
 </p>
 
 <hr />
