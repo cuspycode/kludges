@@ -17,7 +17,6 @@ install:	all
 
 install-web:
 	install -m 0644 -o root -g root mount.html /removable/
-	install -m 0644 -o root -g root ajax.js /removable/
 
 clean:
 	rm -f *.o *~ setuid-wrapper
