@@ -5,8 +5,7 @@ my $volid = $ARGV[1];
 
 die "null arg" unless defined($op) && defined($volid);
 
-####my $MOUNTROOT = "/removable";
-my $MOUNTROOT = "/media";
+my $MOUNTROOT = "/removable";
 
 my %mountpoints = ();
 opendir DIR, $MOUNTROOT or die "couldn't open $MOUNTROOT: $!";
@@ -18,18 +17,45 @@ foreach (@names) {
     }
 }
 
-print "<?xml version='1.0' encoding='utf-8'?>\n";
-print "<response>\n";
-
 if ($op eq 'mount') {
+    print "<?xml version='1.0' encoding='utf-8'?>\n";
+    print "<response>\n";
+    if ($mountpoints{$volid}) {
+	my $status = system {"/bin/mount"} "/bin/mount", "$MOUNTROOT/$volid";
+	if ($status == 0) {
+	    print "<ok/>\n";
+	} else {
+	    print "<error>Mount failed</error>\n";
+	}
+    } else {
+	print "<error>Unrecognized volume</error>\n";
+    }
+    print "</response>\n";
+
 } elsif ($op eq 'unmount') {
+    print "<?xml version='1.0' encoding='utf-8'?>\n";
+    print "<response>\n";
+    if ($mountpoints{$volid}) {
+	my $status = system {"/bin/umount"} "/bin/mount", "$MOUNTROOT/$volid";
+	if ($status == 0) {
+	    print "<ok/>\n";
+	} else {
+	    print "<error>Unmount failed</error>\n";
+	}
+    } else {
+	print "<error>Unrecognized volume</error>\n";
+    }
+    print "</response>\n";
+
 } elsif ($op eq 'list') {
+    print "<?xml version='1.0' encoding='utf-8'?>\n";
+    print "<response>\n";
     foreach my $name (sort keys %mountpoints) {
 	print "   <volume>$name</volume>\n";
     }
+    print "</response>\n";
 } else {
     die "illegal op '$op'";
 }
 
-print "</response>\n";
 
