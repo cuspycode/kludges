@@ -16,7 +16,8 @@ install:	all
 	install -m 0644 -o root -g root .htaccess $(PREFIX)/
 
 install-web:
-	install -m 0644 -o root -g root mount.html /removable/mount.html
+	install -m 0644 -o root -g root mount.html /removable/
+	install -m 0644 -o root -g root ajax.js /removable/
 
 clean:
 	rm -f *.o *~ setuid-wrapper

@@ -17,6 +17,27 @@ foreach (@names) {
     }
 }
 
+my @online = ();
+opendir DIR, "/dev/disk/by-label" or die "couldn't open /dev/disk/by-label: $!";
+my @names = readdir(DIR);
+closedir DIR;
+foreach (@names) {
+    if ($mountpoints{$_}) {
+	push @online, $_;
+    }
+}
+@online = sort @online;
+
+my %mounted = ();
+open FILE, "</proc/mounts" or die "couldn't open /proc/mounts: $!";
+my @lines = <FILE>;
+close FILE;
+foreach (@lines) {
+    if (m{ \Q$MOUNTROOT\E/(\S+)}) {
+	$mounted{$1} = 1;
+    }
+}
+
 if ($op eq 'mount') {
     print "<?xml version='1.0' encoding='utf-8'?>\n";
     print "<response>\n";
@@ -50,12 +71,28 @@ if ($op eq 'mount') {
 } elsif ($op eq 'list') {
     print "<?xml version='1.0' encoding='utf-8'?>\n";
     print "<response>\n";
-    foreach my $name (sort keys %mountpoints) {
-	print "   <volume>$name</volume>\n";
+    if ($volid eq 'all') {
+	foreach my $name (sort keys %mountpoints) {
+	    my $extra = "";
+	    $extra .= " online" if $online{$name};
+	    $extra .= " mounted" if $mounted{$name};
+	    print "   <volume>$name$extra</volume>\n";
+	}
+    } elsif ($volid eq 'mounted') {
+	foreach my $name (@online) {
+	    if ($mounted{$name}) {
+		print "   <volume>$name</volume>\n";
+	    }
+	}
+    } elsif ($volid eq 'unmounted') {
+	foreach my $name (@online) {
+	    if (!$mounted{$name}) {
+		print "   <volume>$name</volume>\n";
+	    }
+	}
     }
     print "</response>\n";
 } else {
     die "illegal op '$op'";
 }
-
 

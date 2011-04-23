@@ -2,14 +2,35 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset="UTF-8" />
 <title>Mount &amp; Unmount</title>
-
+<script src="ajax.js" type="text/javascript"></script>
 </head>
-<body>
+<body onload="refresh();">
 <h1>Mount &amp; Unmount</h1>
 <p>
-Foo.
+<a href="/removable/">[To WebDAV root view]</a>
+</p>
+<p>
+Press "Mount" button to mount an unmounted volume.<br />
+Press "Unmount" button to unmount a mounted volume.<br />
 </p>
 
+<form>
+<hr />
+<p>Mounted volumes:</p>
+<ul id="volumes-mounted">
+</ul>
+
+<hr />
+<p>Unmounted volumes:</p>
+<ul id="volumes-unmounted">
+</ul>
+
+<hr />
+<p>
+  <input type="button" value="Refresh Lists" onclick="refresh(); return false;" />
+
+</p>
+</form>
 
 </body>
 </html>
