@@ -21,6 +21,8 @@ function createButton(op, volid) {
 
 function createListItem(op, name) {
     var li = document.createElement("li");
+    li.appendChild(createButton(opMap[op], name));
+    li.appendChild(document.createTextNode('\u00a0'));
     var txt = document.createTextNode(name);
     if (op == 'mounted') {
 	var a = document.createElement("a");
@@ -30,8 +32,6 @@ function createListItem(op, name) {
     } else {
 	li.appendChild(txt);
     }
-    li.appendChild(document.createTextNode('\u00a0'));
-    li.appendChild(createButton(opMap[op], name));
     return li;
 }
 
