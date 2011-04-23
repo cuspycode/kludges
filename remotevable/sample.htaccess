@@ -1,0 +1,8 @@
+AuthType Basic
+AuthName "Removable"
+AuthUserFile /etc/www-passwords-EDITME
+Require valid-user
+Allow from 192.168.0.0/16
+Order allow,deny
+Satisfy all
+#Satisfy any
