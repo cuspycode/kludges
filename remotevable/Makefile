@@ -1,4 +1,6 @@
-PREFIX	=	/srv/www/cgi-bin/removable
+PREFIX		=	/srv/www/cgi-bin/removable
+
+TARFILES	=	Makefile mount.html request.pl response.pl setuid-wrapper.c sample.htaccess
 
 all:	setuid-wrapper .htaccess
 
@@ -20,4 +22,13 @@ install-web:
 
 clean:
 	rm -f *.o *~ setuid-wrapper
+
+tarball:	
+	sh -c "$(MAKE) TMPID=$$$$ remotevable.tar.gz"
+
+remotevable.tar.gz:	$(TARFILES)
+	mkdir -p tmp$(TMPID).d/remotevable
+	cp -a $(TARFILES) tmp$(TMPID).d/remotevable/
+	(cd tmp$(TMPID).d && tar zcf ../remotevable.tar.gz remotevable)
+	rm -rf tmp$(TMPID).d
 
