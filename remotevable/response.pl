@@ -73,10 +73,7 @@ if ($op eq 'mount') {
     print "<response>\n";
     if ($volid eq 'all') {
 	foreach my $name (sort keys %mountpoints) {
-	    my $extra = "";
-	    $extra .= " online" if $online{$name};
-	    $extra .= " mounted" if $mounted{$name};
-	    print "   <volume>$name$extra</volume>\n";
+	    print "   <volume>$name</volume>\n";
 	}
     } elsif ($volid eq 'mounted') {
 	foreach my $name (@online) {
