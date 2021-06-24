@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset="ISO-8859-1">
-<TITLE>skyffla.pl</TITLE>
+<!-- <TITLE>skyffla.pl</TITLE> -->
 <LINK REL=StyleSheet HREF="../style.css" TYPE="text/css" MEDIA=screen>
 </HEAD>
 <BODY>

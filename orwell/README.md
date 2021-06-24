@@ -1,7 +1,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset="UTF-8" />
-<title>Orwell</title>
+<!-- <title>Orwell</title> -->
 <link rel="StyleSheet" href="../style.css" type="text/css" media="screen" />
 </head>
 <body>
