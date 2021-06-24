@@ -1,7 +1,7 @@
 <HTML>
 <HEAD>
 <META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset="ISO-8859-1">
-<TITLE>BD's Fulhack</TITLE>
+<!-- <TITLE>BD's Fulhack</TITLE> -->
 <LINK REL=StyleSheet HREF="style.css" TYPE="text/css" MEDIA=screen>
 </HEAD>
 <BODY>
