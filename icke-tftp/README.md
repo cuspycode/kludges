@@ -68,17 +68,17 @@ if (length($line) &lt; 10000 &amp;&amp; $line =~ m/^Kaka (\S+)/) {
 <PRE>
 #!/usr/bin/perl
 
-########################################################################
-#                                                                      #
-# TFTP-put over TCP.                                                   #
-#                                                                      #
-# This is the client part of a TFTP protocol replacement for the       #
-# case where only "put" commands are used. The program exits after     #
-# one single put command has been processed, which must be in exactly  #
-# the format specified by the regexp in the code. The port to connect  #
-# to may be specified with the command-line argument -p &lt;port&gt;.        #
-#                                                                      #
-########################################################################
+&#35;#######################################################################
+&#35;                                                                      #
+&#35; TFTP-put over TCP.                                                   #
+&#35;                                                                      #
+&#35; This is the client part of a TFTP protocol replacement for the       #
+&#35; case where only "put" commands are used. The program exits after     #
+&#35; one single put command has been processed, which must be in exactly  #
+&#35; the format specified by the regexp in the code. The port to connect  #
+&#35; to may be specified with the command-line argument -p &lt;port&gt;.        #
+&#35;                                                                      #
+&#35;#######################################################################
 
 use Socket;
 use Getopt::Std;
