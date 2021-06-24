@@ -8,7 +8,7 @@
 I realized that I have never implemented an Egg Timer, so I quickly programmed a shell script to do that.
 It takes two arguments: &lt;MINUTES&gt; &lt;SECONDS&gt;. The &lt;SECONDS&gt; argument is optional.
 The script also checks the environment variable $TIMERHOOK and executes it as a command when the time is up.
-The resolution is about one second, since the script sleeps one second at a time. It uses the command "date +%s" to keep track of the remaining time to wait, so it will automatically adjust its timing if timing loop interval takes longer or shorter than one second (try pressing ^S and ^Q to see how that works). When the time is up, the terminal window will invert its foreground and background colors and prompt for a carriage return. This requires a VT100-compatible terminal window. Note: the script depends on a "date" command that accepts the "+%s" format. This is not POSIX, but modern Linux and macOS systems have it.
+The resolution is about one second, since the script sleeps one second at a time. It uses the command "date +%s" to keep track of the remaining time to wait, so it will automatically adjust its timing if the actual loop interval takes longer or shorter than one second (try pressing ^S and ^Q to see how that works). When the time is up, the terminal window will invert its foreground and background colors and prompt for a carriage return. This requires a VT100-compatible terminal window. Note: the script depends on a "date" command that accepts the "+%s" format. This is not POSIX, but modern Linux and macOS systems have it.
 </p>
 
 <p>
