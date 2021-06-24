@@ -22,16 +22,16 @@ The hack consists of two scripts:
 <PRE>
 #!/usr/bin/perl
 
-########################################################################
-#								       #
-# TFTP-put over TCP.						       #
-#								       #
-# This is the daemon part of a TFTP protocol replacement for the       #
-# case where only "put" commands are used. Run it from inetd as some   #
-# non-root user and prepare /etc/hosts.allow to restrict access.       #
-# A -s &lt;directory&gt; argument is mandatory.			       #
-#								       #
-########################################################################
+&#35;#######################################################################
+&#35;								       #
+&#35; TFTP-put over TCP.						       #
+&#35;								       #
+&#35; This is the daemon part of a TFTP protocol replacement for the       #
+&#35; case where only "put" commands are used. Run it from inetd as some   #
+&#35; non-root user and prepare /etc/hosts.allow to restrict access.       #
+&#35; A -s &lt;directory&gt; argument is mandatory.			       #
+&#35;								       #
+&#35;#######################################################################
 
 use Socket;
 use Getopt::Std;
