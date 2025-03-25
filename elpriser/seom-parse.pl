@@ -137,8 +137,10 @@ print qx(ploticus -prefab chron -svg -o /tmp/seom-plot.svg -scale 1,1.5 \\
 	yrange="0 $YRANGEMAX" ygrid="color=gray(0.8) style=1 dashscale=1" \\
 	legendfmt=singleline mode=line stubvert=no);
 
+my $ycost = 0;
 my $mcost = 0;
 my $last_month = "";
+my $last_tag = "";
 
 foreach my $tag (sort keys %$usage) {
     my $u = $$usage{$tag};
@@ -147,8 +149,12 @@ foreach my $tag (sort keys %$usage) {
     $mcost += $p*$u;
     if (substr($tag,0,7) ne $last_month) {
 	printf "%s %8.2f\n", $tag, $mcost/100;
+	$ycost += $mcost;
 	$mcost = 0;
 	$last_month = substr($tag,0,7);
     }
+    $last_tag = $tag;
 }
+printf "%s %8.2f\n", $last_tag, $mcost/100;
+printf "\nTotal:        %8.2f\n", $ycost/100;
 
