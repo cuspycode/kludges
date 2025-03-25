@@ -13,18 +13,30 @@ sub read_prices {
     open PRICES, "<$filename"
 	or die "Couldn't open $filename";
 
+    my $prev_tag = undef;
     while (defined(my $line = <PRICES>)) {
 	if ($line =~ m/^([0-9][^,]+),(.+)$/) {
 	    my ($tag,@vals) = ($1,split(/,/,$2));
 	    my $hour = "00";
 	    my $minute = "00";
 	    if ($tag =~ m{^(\d\d)/(\d\d)/(\d\d\d\d)$}) {
-		$tag = "$3-$1-$2 $hour";
+		if ($prev_tag && substr($prev_tag,11,2) eq "22") {
+		    $tag = "$3-$1-$2 23";		# Hack for end of DST
+		} else {
+		    $tag = "$3-$1-$2 $hour";
+		}
 	    } elsif ($tag =~ m{^(\d\d)/(\d\d)/(\d\d) (\d\d):(\d\d) (AM|PM)$}) {
-		$hour = ($6 eq "PM" && $4 < 12? sprintf("%02d", $4 + 12) : $4);
+		if ($6 eq "PM" && $4 < 12) {
+		    $hour = sprintf("%02d", $4 + 12);
+		} elsif ($6 eq "AM" && $4 == 12) {
+		    $hour = "00";
+		} else {
+		    $hour = $4;
+		}
 		$tag = "20$3-$1-$2 $hour";
 	    }
 	    $prices{$tag} = $vals[9];
+	    $prev_tag = $tag;
 	}
     }
 
@@ -124,3 +136,19 @@ print qx(ploticus -prefab chron -svg -o /tmp/seom-plot.svg -scale 1,1.5 \\
 	unittype=time \\
 	yrange="0 $YRANGEMAX" ygrid="color=gray(0.8) style=1 dashscale=1" \\
 	legendfmt=singleline mode=line stubvert=no);
+
+my $mcost = 0;
+my $last_month = "";
+
+foreach my $tag (sort keys %$usage) {
+    my $u = $$usage{$tag};
+    my $p = $$prices{$tag};
+    #printf "%s %8.2f\n", $tag, $p*$u;
+    $mcost += $p*$u;
+    if (substr($tag,0,7) ne $last_month) {
+	printf "%s %8.2f\n", $tag, $mcost/100;
+	$mcost = 0;
+	$last_month = substr($tag,0,7);
+    }
+}
+
