@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
-my $PLOTUSAGE = 1;
+my $PLOTUSAGE = $ARGV[0];
+my $QUADRIMESTER = $ARGV[1];
 
 my $count = 0;
 my $sum = 0;
@@ -54,8 +55,8 @@ sub read_usage {
      return \%usage;
 }
 
-my $prices = &read_prices("seom-data/timpriser-pa-el-solceller-inkl-paslag-jan25.csv");
-my $usage = &read_usage("seom-data/seom-el-2024.csv");
+my $prices = &read_prices("$ENV{HOME}/seom-data/timpriser-pa-el-solceller-inkl-paslag-jan25.csv");
+my $usage = &read_usage("$ENV{HOME}/seom-data/seom-el-2024.csv");
 
 if (0) {
 foreach my $tag (sort keys %$prices) {
@@ -77,15 +78,21 @@ print "\ncount=$count, mean=$mean\n";
 
 my $datafile = "/tmp/seom-plot.txt";
 open DATA, ">$datafile" or die "Couldn't open file: $datafile";
-#my @months = ("jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec");
-#my @months = ("may","jun","jul","aug","sep","oct","nov","dec");
-my @months = ("sep","oct","nov","dec");
+
+my @months = ();
+if ($QUADRIMESTER == 1) {
+    @months = ("jan","feb","mar","apr");
+} elsif ($QUADRIMESTER == 2) {
+    @months = ("may","jun","jul","aug");
+} elsif ($QUADRIMESTER == 3) {
+    @months = ("sep","oct","nov","dec");
+}
+
 print DATA "time ".join(" ",@months)."\n";
 foreach my $hour (0..24) {
     my @mm = ();
-    #foreach my $month (1..12) {
-    #foreach my $month (5..12) {
-    foreach my $month (9..12) {
+    foreach my $i (0..3) {
+	my $month = $i+1+4*($QUADRIMESTER-1);
 	my $sum = 0;
 	my $count = 0;
 	foreach my $day (1..31) {
