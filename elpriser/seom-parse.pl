@@ -67,7 +67,8 @@ sub read_usage {
      return \%usage;
 }
 
-my $prices = &read_prices("$ENV{HOME}/seom-data/timpriser-pa-el-solceller-inkl-paslag-jan25.csv");
+#my $prices = &read_prices("$ENV{HOME}/seom-data/timpriser-pa-el-solceller-inkl-paslag-jan25.csv");
+my $prices = &read_prices("$ENV{HOME}/seom-data/gen-static-prices.txt");
 my $usage = &read_usage("$ENV{HOME}/seom-data/seom-el-2024.csv");
 
 if (0) {

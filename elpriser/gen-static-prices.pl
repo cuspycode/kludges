@@ -39,7 +39,8 @@ foreach my $month (0..11) {
 		$hourtag = sprintf("%02d/%02d/%02d %02d:00 %s", $month+1, $mday, $MY_YEAR-2000, $h12, $ampm);
 	    }
 	    my $moms = 1.25;
-	    my $final = $moms * ($price + $cert + $tax + $eavg);
+	    #my $final = $moms * ($price + $cert/100 + $tax + $eavg/100);
+	    my $final = $moms * ($price + $cert + $tax);
 	    print "$hourtag,60,0,0,0,0,0,0,0,0,$final\n";
 	}
     }
