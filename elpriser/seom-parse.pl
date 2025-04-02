@@ -143,18 +143,19 @@ my $last_month = "";
 my $last_tag = "";
 
 foreach my $tag (sort keys %$usage) {
-    my $u = $$usage{$tag};
-    my $p = $$prices{$tag};
-    #printf "%s %8.2f\n", $tag, $p*$u;
-    $mcost += $p*$u;
     if (substr($tag,0,7) ne $last_month) {
-	printf "%s %8.2f\n", $tag, $mcost/100;
+	printf "%s %8.2f\n", $last_tag, $mcost/100 if $last_month;
 	$ycost += $mcost;
 	$mcost = 0;
 	$last_month = substr($tag,0,7);
     }
+    my $u = $$usage{$tag};
+    my $p = $$prices{$tag};
+    #printf "%s %8.2f\n", $tag, $p*$u;
+    $mcost += $p*$u;
     $last_tag = $tag;
 }
+$ycost += $mcost;
 printf "%s %8.2f\n", $last_tag, $mcost/100;
 printf "\nTotal:        %8.2f\n", $ycost/100;
 
