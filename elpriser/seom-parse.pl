@@ -2,6 +2,7 @@
 
 my $PLOTUSAGE = $ARGV[0];
 my $QUADRIMESTER = $ARGV[1];
+my $BATSHIFT = $ENV{BATSHIFT};
 
 my $count = 0;
 my $sum = 0;
@@ -67,9 +68,27 @@ sub read_usage {
      return \%usage;
 }
 
-#my $prices = &read_prices("$ENV{HOME}/seom-data/timpriser-pa-el-solceller-inkl-paslag-jan25.csv");
-my $prices = &read_prices("$ENV{HOME}/seom-data/gen-static-prices.txt");
+my $prices = &read_prices("$ENV{HOME}/seom-data/timpriser-pa-el-solceller-inkl-paslag-jan25.csv");
+#my $prices = &read_prices("$ENV{HOME}/seom-data/gen-static-prices.txt");
 my $usage = &read_usage("$ENV{HOME}/seom-data/seom-el-2024.csv");
+
+if (defined($BATSHIFT) && $BATSHIFT) {
+   my @adjust = (1.8,1.8,1.6,1.2,  0.6,0.6,0.6,0.6,  0.5,0.8,1.1,1.7);
+    foreach my $tag (sort keys %$usage) {
+	if ($tag =~ m/\d\d\d\d-(\d\d)-\d\d (\d\d)/) {
+	    my $adjust = $adjust[$1-1];
+	    my $x = $2;
+	    if ($x == 0|| $x == 1 || $x == 2 || $x == 3 || $x == 4 || $x == 5) {
+		$$usage{$tag} += $adjust*15/6;	# kWh
+	    } elsif ($x == 7 || $x == 8 || $x == 9 || $x == 10 || $x == 11 || $x == 12 || $x == 13 || $x == 14 || $x == 15 || $x == 16 || $x == 17 || $x == 18 || $x == 19 || $x == 20 || $x == 21) {
+		$$usage{$tag} -= $adjust;	# kWh
+	    }
+ print "# $tag: $adjust\n" if $$usage{$tag} <= 0;
+ print "# Negative usage! ", $$usage{$tag}, " for $tag\n" if $$usage{$tag} <= 0;
+	    my $y = $$usage{$tag};
+	}
+    }
+}
 
 if (0) {
 foreach my $tag (sort keys %$prices) {
@@ -129,7 +148,7 @@ foreach my $hour (0..24) {
 
 close DATA;
 
-my $YRANGEMAX = ($PLOTUSAGE? 5 : 200);
+my $YRANGEMAX = ($PLOTUSAGE? 8 : 200);
 
 print qx(ploticus -prefab chron -svg -o /tmp/seom-plot.svg -scale 1,1.5 \\
 	data=/tmp/seom-plot.txt \\
