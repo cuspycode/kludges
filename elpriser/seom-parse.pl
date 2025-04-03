@@ -73,14 +73,14 @@ my $prices = &read_prices("$ENV{HOME}/seom-data/timpriser-pa-el-solceller-inkl-p
 my $usage = &read_usage("$ENV{HOME}/seom-data/seom-el-2024.csv");
 
 if (defined($BATSHIFT) && $BATSHIFT) {
-   my @adjust = (1.8,1.8,1.6,1.2,  0.6,0.6,0.6,0.6,  0.5,0.8,1.1,1.7);
+   my @adjust = (2.0,1.9,1.6,1.2,  0.6,0.6,0.6,0.6,  0.5,0.8,1.1,1.8);
     foreach my $tag (sort keys %$usage) {
 	if ($tag =~ m/\d\d\d\d-(\d\d)-\d\d (\d\d)/) {
 	    my $adjust = $adjust[$1-1];
 	    my $x = $2;
-	    if ($x == 0|| $x == 1 || $x == 2 || $x == 3 || $x == 4 || $x == 5) {
-		$$usage{$tag} += $adjust*15/6;	# kWh
-	    } elsif ($x == 7 || $x == 8 || $x == 9 || $x == 10 || $x == 11 || $x == 12 || $x == 13 || $x == 14 || $x == 15 || $x == 16 || $x == 17 || $x == 18 || $x == 19 || $x == 20 || $x == 21) {
+	    if ($x == 0 || $x == 1 || $x == 2 || $x == 3 || $x == 4 || $x == 5) {
+		$$usage{$tag} += $adjust*18/6;	# kWh
+	    } elsif ($x == 6 || $x == 7 || $x == 8 || $x == 9 || $x == 10 || $x == 11 || $x == 12 || $x == 13 || $x == 14 || $x == 15 || $x == 16 || $x == 17 || $x == 18 || $x == 19 || $x == 20 || $x == 21 || $x == 22 || $x == 23) {
 		$$usage{$tag} -= $adjust;	# kWh
 	    }
  print "# $tag: $adjust\n" if $$usage{$tag} <= 0;
