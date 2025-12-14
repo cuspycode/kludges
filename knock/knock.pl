@@ -1,6 +1,7 @@
 #!/usr/bin/perl
 
 use Fcntl qw/:DEFAULT :flock/;
+use POSIX qw/setsid/;
 
 my $arg = $ARGV[0];
 my $DELAY = 300;
@@ -38,6 +39,7 @@ if ($del) {
 if ($add) {
     my $pid = fork();
     if ($pid == 0) {
+	setsid();
 	if ($sleep) {
 	    sleep $DELAY;
 	}
