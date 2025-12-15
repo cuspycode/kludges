@@ -7,7 +7,7 @@ my $arg = $ARGV[0];
 my $DELAY = 300;
 my $PORT = "2222";
 my $SBIN = "/usr/sbin";
-my @RULE_ARGS = ("INPUT", "-p", "tcp", "--destination-port", "$PORT", "-j", "DROP");
+my @RULE_ARGS = ("INPUT", "-p", "tcp", "--syn", "--destination-port", "$PORT", "-j", "DROP");
 my $LOCKFILE_PATH = "/tmp/knock.lockfile";
 
 if (!open FILE, "+>>$LOCKFILE_PATH") {
@@ -50,6 +50,7 @@ if ($add) {
 	system {"$SBIN/iptables"} "$SBIN/iptables", "-A", @RULE_ARGS;
 	system {"$SBIN/ip6tables"} "$SBIN/ip6tables", "-A", @RULE_ARGS;
     } else {
+	sleep 1;
 	exit(0);
     }
 }
