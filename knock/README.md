@@ -38,3 +38,16 @@ Note 1: You probably want to do this as an initialization every time you reboot.
 
 Note 2: This is not an idempotent operation! If you repeat it, the rules will be added multiple times, which will require manual intervention to clean up.
 
+## Examples
+
+Here is a sample interaction with `knock` using the Termux app on a mobile phone:
+
+```text
+~ $ ssh knock@myhost.example.com
+Enter passphrase for key '/data/data/com.termux/files/home/.ssh/id_rsa':
+Who's there? Door will be closed in 300 seconds.
+Connection to myhost.example.com closed.
+~ $
+```
+
+Now you have 5 minutes to connect to port 2222 on `myhost.example.com` from any other device. Port 2222 does not even have to use the SSH protocol, it can be anything as long as it's TCP.
