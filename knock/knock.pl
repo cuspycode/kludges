@@ -31,6 +31,10 @@ if (!defined($arg)) {
     $add = 1;
 }
 
+if ($del && $add) {
+    print "Who's there? Door will be closed in $DELAY seconds.\n";
+}
+
 if ($del) {
     system {"$SBIN/iptables"} "$SBIN/iptables", "-D", @RULE_ARGS;
     system {"$SBIN/ip6tables"} "$SBIN/ip6tables","-D", @RULE_ARGS;
