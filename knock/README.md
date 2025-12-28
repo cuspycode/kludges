@@ -1,6 +1,6 @@
 # knock
 
-Inspired by the concept of port-knocking. A special ssh login runs a small perl script that opens a hole in the firewall of the Linux host for a few minutes, to allow remote login via a specific port that was temporarily exposed. This is sometimes useful for ports that are tunnelled from other hosts where the security policies may be different from the ones on the main host.
+Inspired by the concept of [port-knocking](https://en.wikipedia.org/wiki/Port_knocking). A special ssh login runs a small script that opens a hole in the firewall of the Linux host, to allow remote login via a specific port that was temporarily exposed. This is sometimes useful for ports that are tunnelled from other hosts where the security policies may be different from the ones on the main host. The opening in the firewall is automatically closed after a few minutes, although connections that have already been established will stay open.
 
 ## How to install
 
@@ -29,7 +29,7 @@ sudo iptables -n -L
 sudo ip6tables -n -L
 ```
 
-If no conflicts were found, proceed by adding the `knock` rules:
+If you don't see any potential conflicts here, proceed with adding the `knock` rules by running this command:
 
 ```bash
 /opt/knock/knock add
@@ -51,3 +51,10 @@ Connection to myhost.example.com closed.
 ```
 
 Now you have 5 minutes to connect to port 2222 on `myhost.example.com` from any other device. Port 2222 does not even have to use the SSH protocol, it can be anything as long as it's TCP.
+
+Sample command for setting up a tunnel forwarding SSH to port 2222 on the remote host:
+
+```text
+$ ssh -N -g -R :2222:127.0.0.1:22 -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes myhost.example.com
+```
+
