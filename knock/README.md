@@ -58,3 +58,6 @@ Sample command for setting up a tunnel forwarding SSH to port 2222 on the remote
 $ ssh -N -g -R :2222:127.0.0.1:22 -o ServerAliveInterval=60 -o ExitOnForwardFailure=yes myhost.example.com
 ```
 
+Notes: `-N` tells ssh to not run any remote command. `-g` tells the remote server to allow other machines to connect to the forwarded port. For this to work you need to set `GatewayPorts` to either `yes` or `clientspecified` in `/etc/ssh/sshd_config` on the the server. And `-R` sets upp the port forwarding.
+
+The options `ServerAliveInterval` and `ExitOnForwardFailure` are nice to have on long-running port forwardings.
