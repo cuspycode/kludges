@@ -14,10 +14,10 @@ from F-Droid.
 
 ## A few prerequisites
 
-- First it is a good idea to set up an SSH service, so you can
+- First, it is a good idea to set up an SSH service, so you can
   login remotely to your Android device. There are multiple guides
-  on the Internet on how to do this. Personally I like to run it in
-  as a foreground process in a Termux session. See my [startssh](#startssh)
+  on the Internet on how to do this. Personally I like to run it as
+  a foreground process in a Termux session. See my [startssh](#startssh)
   script for a way to do this in the same command that starts `ssh-agent`.
   Also see my [notes on running rsync](#rsync-is-your-friend).
 - Termux will be killed by the operating system unless you protect it
