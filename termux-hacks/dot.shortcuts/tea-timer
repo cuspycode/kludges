@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+sleep 180 && termux-tts-speak -r 0.7 -p 0.8 your tea is ready
+termux-toast "Your tea is ready"
+

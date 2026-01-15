@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+SOCKET=/data/data/com.termux/files/home/.ssh-agent-socket
+rm -f "$SOCKET"
+ssh-agent -a "$SOCKET" sh -c "ssh-add; sshd -D"
