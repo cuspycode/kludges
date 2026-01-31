@@ -4,9 +4,9 @@ Termux is not only a great terminal emulator for Android, it is
 also an entire ecosystem for Linux command-line programs, with its
 own package repository, similar to mainstream Linux distributions.
 
-As of 2025-12-20, you should install Termux from F-Droid,
-*not* the version from Google Play. Lots of stuff didn't work
-when I tried the Google Play version. This might change in the
+When I write this in December 2025, you should install Termux from
+F-Droid, *not* the version from Google Play. Lots of stuff didn't
+work when I tried the Google Play version. This might change in the
 future of course.
 
 The version I am using when writing this is Termux `0.118.3`
@@ -20,36 +20,52 @@ from F-Droid.
   a foreground process in a Termux session. See my [startssh](#startssh)
   script for a way to do this in the same command that starts `ssh-agent`.
   Also see my [notes on running rsync](#rsync-is-your-friend).
-- Termux will be killed by the operating system unless you protect it
-  by running `termux-wake-lock` after you start the app. And for some
-  platforms (notably Samsung) you also need to disable Battery Optimization
-  (set it to "Unrestricted") for the Termux app, and add it to the list
-  of "Never sleeping apps".
+- Termux will be killed after a while by the operating system unless you
+  protect it by running `termux-wake-lock` after you start the app.
+  And for some platforms (notably Samsung) you also need to disable
+  Battery Optimization (set it to "Unrestricted") for the Termux app,
+  and add it to the list of "Never sleeping apps".
 
 For using Termux Widgets you also need to do:
 - Install the app "Termux:Widgets", and then install "Termux:API".
-- Add the permission `Appear on top` to the Termux:Widget app.
+- Add the permission "Appear on top" to the Termux:Widget app.
 - The Termux app (or the Termux API app?) needs to be in the
   foreground for some of the API features to work.
 - For some of my hacks, you will also need the "jq" program for
   parsing JSON (i.e. the latest fad in the endless progression
   of s-expression wannabes). This is easily done by running the
   command `pkg install jq`.
+<br />
 
 ## Some other tips for using Termux
 
 - Get rid of the colors! They are just irritating.
-  [Disable Termux colors](#disable-termux-colors)
+  See the section on [disabling Termux colors](#disable-termux-colors)
+  for details.
 
 - If you use Emacs, it is very convenient to use "Tramp mode" to edit
   files on your target device. Just set up an SSH server on the device
-  and add the key of your development computer to it. Then you don't have
+  and add the SSH key of your development computer to it. Then you don't have
   to install Emacs on your mobile phone (unless you want to of course).
 
 ## Rsync is your friend
 
 Fetch photos and backup other things by connecting from another machine
-via `rsync` (fill in later).
+via `rsync`. For example, the following command on your computer will
+fetch photos from your Termux device:
+
+```text
+rsync -e "ssh -p 60022" -av 192.0.2.3:storage/dcim/Camera/ ~/Pictures/phone/
+```
+
+Adapt the above command to your particular circumstances:
+- `60022` is the SSH port on the Termux device.
+- `192.0.2.3` is the IP address of the Termux device.
+- `~/Pictures/phone` is the destination folder on your computer.
+
+And as always with `rsync`, the trailing slashes are important.
+They determine whether the intended object is a directory or
+the contents of a directory.
 
 ## .profile
 
@@ -97,13 +113,45 @@ in case you wish to try out other ways of starting `sshd`.
 
 Work in progress. Set white for `color2` which is used in the prompt,
 and also for `color8` to `color15`. This eliminates most of the headaches
-caused by colored text. (fill in later)
+caused by colored text. My basic goal here is to make all text to be white
+on a black background. No more dark blue text on a black background, or
+yellow text on a white background, or any similar abominations.
+See the contents of this file:
+
+[.termux/colors.properties](dot.termux/colors.properties)
 
 ## Termux Widget apps (.shortcuts)
+
+The files under `dot.shortcuts` should be placed under `.shortcuts`
+in your Termux home directory.
 
 ### .shortcuts/hello
 
 Displays "Hello, World!" as a toast on the main screen.
+
+### .shortcuts/timed-flashlight
+
+A very straigt-forward script that turns on the flashlight after a
+few seconds delay, and then turns it back off after a second delay.
+The commands in the script are:
+
+```text
+sleep 5
+termux-torch on
+sleep 45
+termux-torch off
+
+```
+Just edit the `sleep` commands to customize the script.
+
+### .shortcuts/tea-timer
+
+A simple timer that sleeps for 3 minutes and then says
+"Your tea is ready" via the text-to-speech feature.
+
+For a more sophisticated timer, see [Egg Timer](../egg-timer/)
+which has a slightly different purpose and works in pure shell
+with no Termux dependencies.
 
 ### .shortcuts/goodnight
 
@@ -111,9 +159,17 @@ This is something I use to turn off the screen of my main desktop computer.
 This computer is located right next to my bedroom, so the glare from the
 screen is sometimes visible after I go to bed. 
 
-### .shortcuts/tea-timer
-
 ### .shortcuts/push-photos
+
+Sends newly taken photos to a designated host. This is different and
+complementary to the remote-initiated rsync method described
+above in the section [Rsync is your friend](#rsync-is-your-friend).
+
+With `push-photos` you can quickly upload your lates photos to a
+predefined host. This can come in handy if you unexpectantly become
+a witness to police brutality or other things where you need to upload
+your latest photos quickly, before your evidence-containing phone gets
+destroyed or confiscated.
 
 ### .shortcuts/hulog
 

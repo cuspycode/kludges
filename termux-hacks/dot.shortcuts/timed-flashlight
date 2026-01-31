@@ -1,0 +1,6 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+sleep 5
+termux-torch on
+sleep 45
+termux-torch off
