@@ -4,6 +4,18 @@ Termux is not only a great terminal emulator for Android, it is
 also an entire ecosystem for Linux command-line programs, with its
 own package repository, similar to mainstream Linux distributions.
 
+If you are impatient, skip directly to the hacks:
+- [startssh](#startssh)
+- [hello](#shortcutshello)
+- [timed-flashlight](#shortcutstimed-flashlight)
+- [tea-timer](#shortcutstea-timer)
+- [goodnight](#shortcutsgoodnight)
+- [perltest](#shortcutsperltest)
+- [push-photos](#shortcutspush-photos)
+- [hulog](#shortcutshulog)
+
+If you aren't impatient, keep reading instead.
+
 When I write this in December 2025, you should install Termux from
 F-Droid, *not* the version from Google Play. Lots of stuff didn't
 work when I tried the Google Play version. This might change in the
@@ -35,6 +47,9 @@ For using Termux Widgets you also need to do:
   parsing JSON (i.e. the latest fad in the endless progression
   of s-expression wannabes). This is easily done by running the
   command `pkg install jq`.
+
+Note: the above worked for me, running Android 16. Other devices and
+systems may work differently.
 <br />
 
 ## Some other tips for using Termux
@@ -103,6 +118,8 @@ convenience, so that subsequent ssh commands can be done without requiring
 the passphrase. This is optional however; you can just press RETURN here
 (which provides a wrong passphrase) and run `ssh-add` later if you want.
 * Start `sshd` with the option `-D` to make it run in the foreground.
+Then if you need to, you can revisit this Termux session later and terminate
+it with ^C.
 
 Note: The listening port can't be the default 22 unless you run the daemon
 as root. I recommend setting a non-privileged port number in
@@ -132,7 +149,7 @@ Displays "Hello, World!" as a toast on the main screen.
 ### .shortcuts/timed-flashlight
 
 A very straigt-forward script that turns on the flashlight after a
-few seconds delay, and then turns it back off after a second delay.
+few seconds delay, and then turns it back off after another delay.
 The commands in the script are:
 
 ```text
@@ -142,7 +159,7 @@ sleep 45
 termux-torch off
 
 ```
-Just edit the `sleep` commands to customize the script.
+Just edit the `sleep` commands to customize the script for your own needs.
 
 ### .shortcuts/tea-timer
 
@@ -159,17 +176,64 @@ This is something I use to turn off the screen of my main desktop computer.
 This computer is located right next to my bedroom, so the glare from the
 screen is sometimes visible after I go to bed. 
 
+### .shortcuts/perltest
+
+Sample test script written in Perl. Demonstrates file locking using
+the UNIX "flock" primitive.
+<br />Install perl first via `pkg install perl`.
+
 ### .shortcuts/push-photos
 
 Sends newly taken photos to a designated host. This is different and
 complementary to the remote-initiated rsync method described
 above in the section [Rsync is your friend](#rsync-is-your-friend).
 
-With `push-photos` you can quickly upload your lates photos to a
-predefined host. This can come in handy if you unexpectantly become
-a witness to police brutality or other things where you need to upload
-your latest photos quickly, before your evidence-containing phone gets
-destroyed or confiscated.
+With `push-photos` you can quickly upload your latest photos to a
+predefined host. This can come in handy if you unexpectedly become
+a witness to criminal activity, like for example police brutality,
+or any other situation where you need to upload your latest photos
+quickly before your evidence-containing phone gets destroyed or
+confiscated.
 
 ### .shortcuts/hulog
 
+The name "hulog" is an abbreviation for "Human Log". The original
+intention for this script was to log timestamps together with some
+predefined user-selected keywords in a log file, at the press of
+a button.
+It has evolved slightly, and it can now also take (very short)
+voice notes, do ambient light readings (in terms of Lux measurements),
+and log the current GPS location.
+
+This script could easily grow into a "kitchen sink" script that collects
+and logs any data you can imagine. In that case it should probably
+be changed to use some kind of plugin architecture, or be turned into
+a regular app, but for now it's still just a small bash script that fits
+on a single page when printed.
+
+I have considered adding features that involve the detection of
+movement, i.e. by using the accelerometer, or detecting a change
+of Wifi connection, and similar things. But those things would require
+having a background process that monitors the accelerometer (or whatever)
+and then detects a sudden change. I don't think Termux is suitable for
+that type of application however, but I may be wrong about that.
+
+Some notes:
+- GPS data is logged to a separate file (`gps-hulog.json`) together
+with a timestamp. The timestamp is identical to the timestamp logged
+in the main logfile `hulog.txt`, so it can be used as a foreign key
+in a relational-logic sense.
+- Speech recognition may or may not work without Internet connectivity.
+It does work on my device, which I think is quite fascinating, and a
+tribute to how capable modern mobile phones are. It only seems to work
+in English however, but not in my native language.
+- No data is exported from the mobile phone, except when the user chooses
+to do so (see [Rsync is your friend](#rsync-is-your-friend) above).
+
+To view the log files, you will have to copy them to a regular computer
+(see [Rsync is your friend](#rsync-is-your-friend) for details).
+If you want to view them directly on your mobile phone,
+I recommend the app "Text Viewer" (by Panagola Private Limited).
+Or alternatively you can use a file manager (for example "My Files"
+by Google) to invoke an app of your choice to open it. For example,
+"Notepad Free" (by atomczak), which I currently use for note-taking.

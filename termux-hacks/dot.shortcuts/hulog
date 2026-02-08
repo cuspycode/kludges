@@ -1,0 +1,45 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+LOGFILE="$HOME/hulog.txt"
+LOGFIlE_GPS="$HOME/gps-hulog.json"
+
+# Define the checkbox labels and their indices
+LABEL[BOX_START=0]="Start"
+LABEL[BOX_STOP=1]="Stop"
+LABEL[BOX_CHECKPOINT=2]="Checkpoint"
+LABEL[BOX_SPOKEN=3]="Spoken Token"
+LABEL[BOX_LUX=4]="Lux"
+LABEL[BOX_GPS=5]="GPS Location"
+
+# Use eval & IFS trick to join the labels
+IFS="," eval 'LABELS=${LABEL[*]}'
+
+# Prompt the user and parse the response
+JSON=`termux-dialog checkbox -v "$LABELS" -t "Log checkpoint"`
+TAGS=`echo "$JSON" | jq -r .text`
+INDEX=`echo "$JSON" | jq -r .values.[].index`
+
+# Create a human-readable timestamp to be used as a key
+TIMESTAMP=`date "+%F %H:%M:%S %Z"`
+echo $TIMESTAMP Tags: $TAGS >> "$LOGFILE"
+
+# Handle special case that prompts for spoken input
+if ( echo "$INDEX" | grep -q $BOX_SPOKEN ); then
+    TOKEN=`termux-dialog speech -t "Say something" -i "Some token" | jq -r .text`
+    echo $TIMESTAMP "Spoken Token: $TOKEN" >> "$LOGFILE"
+fi
+
+# Handle special case that reads light sensor
+if ( echo "$INDEX" | grep -q $BOX_LUX ); then
+    LUXVAL=$(termux-sensor -d 500 -n 3 -s "STK31610 Light" |\
+        jq -r '."STK31610 Light".values.[]' |\
+        awk '{ sum += $1 } END { print sum/NR }')
+    echo $TIMESTAMP "Lux value: $LUXVAL" >> "$LOGFILE"
+fi
+
+# Handle special case that reads GPS data
+if ( echo "$INDEX" | grep -q $BOX_GPS ); then
+    termux-location | jq --arg TS "$TIMESTAMP" '. += {"timestamp" : $TS}' \
+        >> "$LOGFIlE_GPS" &
+fi
+

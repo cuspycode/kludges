@@ -1,0 +1,9 @@
+#!/data/data/com.termux/files/usr/bin/sh
+
+REMOTE="charlie@server.example.com:pushed-photos/"
+DAYS=5  # Only send files more recent than this
+
+(cd "$HOME/storage/dcim/Camera" && \
+    find . -type f -mtime -$DAYS -print | cut -c3-) |\
+        rsync -av --include-from=- --exclude='*' \
+            "$HOME/storage/dcim/Camera/" "$REMOTE"

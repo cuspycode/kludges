@@ -1,0 +1,18 @@
+#!/data/data/com.termux/files/usr/bin/perl
+
+use Fcntl qw/:DEFAULT :flock/;
+
+my $LOCKFILE_PATH = "perltest.lockfile";
+my $NAP_TIME = 5;
+
+open FILE, "+>>$LOCKFILE_PATH" ||
+    die "Couldn't open '$LOCKFILE_PATH': $!";
+
+flock FILE, LOCK_EX ||
+    die "Couldn't lock '$LOCKFILE_PATH': $!";
+
+print "Hello World, with a file lock!\n";
+sleep $NAP_TIME;
+close FILE;
+
+1;
