@@ -5,5 +5,5 @@ DAYS=5  # Only send files more recent than this
 
 (cd "$HOME/storage/dcim/Camera" && \
     find . -type f -mtime -$DAYS -print | cut -c3-) |\
-        rsync -av --include-from=- --exclude='*' \
+        rsync -rtOv --chmod=a+r --include-from=- --exclude='*' \
             "$HOME/storage/dcim/Camera/" "$REMOTE"
