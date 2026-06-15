@@ -1,0 +1,25 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+STATUS="$HOME/.tea-timer-status.txt"
+
+PHRASE[0]="Your tea is ready."
+PHRASE[1]="You can remove the tea bag now."
+PHRASE[2]="I think the tea is done."
+PHRASE[3]="Yet another cup of tea."
+N=4
+
+INDEX0=$(cat $STATUS)
+INDEX=$INDEX0
+while [ "$INDEX" = "$INDEX0" ]; do
+      INDEX=$(expr $N \* $RANDOM / 32768)
+done
+echo $INDEX > "$STATUS"
+
+# Random pitch between 0.4 and 1.6
+PITCH=$(perl -e 'printf "%.1f", 0.4+1.2*rand()')
+
+$HOME/.shortcuts/hulog -t "Teatime"
+
+sleep 180 && termux-tts-speak -r 0.6 -p ${PITCH} ${PHRASE[$INDEX]} &
+termux-toast "Starting tea-timer..."
+
