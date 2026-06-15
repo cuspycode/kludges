@@ -17,10 +17,15 @@ IFS="," eval 'LABELS=${LABEL[*]}'
 # Create a human-readable timestamp to be used as a key
 TIMESTAMP=`date "+%F %H:%M:%S %Z"`
 
-# Prompt the user and parse the response
-JSON=`termux-dialog checkbox -v "$LABELS" -t "Log checkpoint"`
-TAGS=`echo "$JSON" | jq -r .text`
-INDEX=`echo "$JSON" | jq -r .values.[].index`
+# Provide tags either via script argument or via GUI dialog
+if [ "$1" = "-t" ]; then
+    TAGS="[$2]"
+else
+    # Prompt the user and parse the response
+    JSON=`termux-dialog checkbox -v "$LABELS" -t "Log checkpoint"`
+    TAGS=`echo "$JSON" | jq -r .text`
+    INDEX=`echo "$JSON" | jq -r .values.[].index`
+fi
 
 # Log timestamp and tags
 echo $TIMESTAMP Tags: $TAGS >> "$LOGFILE"
