@@ -6,7 +6,8 @@ PHRASE[0]="Your tea is ready."
 PHRASE[1]="You can remove the tea bag now."
 PHRASE[2]="I think the tea is done."
 PHRASE[3]="Yet another cup of tea."
-N=4
+PHRASE[4]="You want the taste of dried leaves in boiled water?"
+N=5
 
 INDEX0=$(cat $STATUS)
 INDEX=$INDEX0
