@@ -6,8 +6,9 @@ PHRASE[0]="Your tea is ready."
 PHRASE[1]="You can remove the tea bag now."
 PHRASE[2]="I think the tea is done."
 PHRASE[3]="Yet another cup of tea."
-PHRASE[4]="You want the taste of dried leaves in boiled water?"
-N=5
+PHRASE[4]="I say let the world go to hell, but I should always have my tea."
+PHRASE[5]="You now have something quite but not entirely unlike tea"
+N=6
 
 INDEX0=$(cat $STATUS)
 INDEX=$INDEX0
@@ -16,8 +17,8 @@ while [ "$INDEX" = "$INDEX0" ]; do
 done
 echo $INDEX > "$STATUS"
 
-# Random pitch between 0.4 and 1.6
-PITCH=$(perl -e 'printf "%.1f", 0.4+1.2*rand()')
+# Random pitch between 0.1 and 1.7
+PITCH=$(perl -e 'printf "%.1f", 0.1+1.6*rand()**2')
 
 $HOME/.shortcuts/hulog -t "Teatime"
 
