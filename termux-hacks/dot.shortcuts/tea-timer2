@@ -6,9 +6,17 @@ PHRASE[0]="Your tea is ready."
 PHRASE[1]="You can remove the tea bag now."
 PHRASE[2]="I think the tea is done."
 PHRASE[3]="Yet another cup of tea."
+# Fyodor Dostoyevsky
 PHRASE[4]="I say let the world go to hell, but I should always have my tea."
+# Douglas Adams
 PHRASE[5]="You now have something quite but not entirely unlike tea"
-N=6
+# Leo Tolstoy
+PHRASE[6]="I must drink my tea; it is my oil, without which my engine won't go."
+# Arthur Schopenauer
+PHRASE[7]="Tea is the only good thing that came out of the British Empire."
+# Abraham Lincoln
+PHRASE[8]="If this is coffee, please bring me some tea; but if this is tea, please bring me some coffee."
+N=9
 
 INDEX0=$(cat $STATUS)
 INDEX=$INDEX0
