@@ -18,6 +18,19 @@ PHRASE[7]="Tea is the only good thing that came out of the British Empire."
 PHRASE[8]="If this is coffee, please bring me some tea; but if this is tea, please bring me some coffee."
 N=9
 
+ZACC=$(termux-sensor -d 50 -n 1 -s Accelerometer |\
+    jq -r 'to_entries[0].value.values[1]|floor')
+
+if [ "$ZACC" -lt -7 ]; then
+    echo $ZACC Upside down.
+    IFS="_" eval 'LABELS=${PHRASE[*]}'
+    LABELS=$(echo "$LABELS" | tr , " ")
+    INDEX=`termux-dialog radio -v "$(echo $LABELS | tr _ ,)" | jq -r .index`
+    echo ${PHRASE[$INDEX]}
+    termux-tts-speak -r 0.6 -p 0.7 ${PHRASE[$INDEX]}
+    exit 0
+fi
+
 INDEX0=$(cat $STATUS)
 INDEX=$INDEX0
 while [ "$INDEX" = "$INDEX0" ]; do
